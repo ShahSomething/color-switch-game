@@ -1,3 +1,4 @@
+import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/player.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
@@ -11,6 +12,7 @@ class MyGame extends FlameGame with TapCallbacks {
         );
 
   late Player player;
+  late Ground ground;
   @override
   Color backgroundColor() {
     return const Color(0xFF222222);
@@ -19,6 +21,8 @@ class MyGame extends FlameGame with TapCallbacks {
   @override
   void onMount() {
     player = Player();
+    ground = Ground(position: Vector2(0, 400));
+    world.add(ground);
     world.add(player);
 
     super.onMount();

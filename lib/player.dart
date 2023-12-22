@@ -1,10 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:color_switch_game/ground.dart';
+import 'package:color_switch_game/my_game.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
 
-class Player extends PositionComponent {
+class Player extends PositionComponent with HasGameRef<MyGame> {
   final double radius;
   Player({this.radius = 15});
 
@@ -23,6 +25,12 @@ class Player extends PositionComponent {
   @override
   void update(double dt) {
     position += _speed * dt;
+
+    Ground ground = gameRef.ground;
+    if (ground.toRect().overlaps(toRect())) {
+      position = Vector2(position.x, ground.position.y - radius);
+      _speed.y = 0;
+    }
     _speed.y += _gravity * dt;
     super.update(dt);
   }
