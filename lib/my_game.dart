@@ -28,8 +28,8 @@ class MyGame extends FlameGame with TapCallbacks {
 
   @override
   void onMount() {
-    player = Player();
-    camera.follow(player);
+    player = Player(position: Vector2(0, 250));
+    //camera.follow(player);
     ground = Ground(position: Vector2(0, 400));
     world.add(ground);
     world.add(player);
@@ -40,12 +40,12 @@ class MyGame extends FlameGame with TapCallbacks {
 
   @override
   void update(double dt) {
-    // final cameraY = camera.viewfinder.position.y;
-    // final playerY = player.position.y;
+    final cameraY = camera.viewfinder.position.y;
+    final playerY = player.position.y;
 
-    // if (playerY < cameraY) {
-    //   camera.viewport.position = Vector2(0, playerY);
-    // }
+    if (playerY < cameraY) {
+      camera.viewfinder.position = player.position;
+    }
     super.update(dt);
   }
 

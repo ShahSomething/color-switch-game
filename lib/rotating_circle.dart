@@ -1,22 +1,24 @@
 import 'package:color_switch_game/my_game.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class RotatingCircle extends PositionComponent with HasGameRef<MyGame> {
   final double radius;
   final double thickness;
+  final double rotationSpeed;
   RotatingCircle({
     this.radius = 15,
     required super.position,
     this.thickness = 8,
+    this.rotationSpeed = 2,
   });
 
   @override
   Future<void> onLoad() async {
     size = Vector2.all(radius * 2);
     anchor = Anchor.center;
-    debugMode = true;
 
     final colors = gameRef.gameColors;
     final arcCount = colors.length;
@@ -33,21 +35,17 @@ class RotatingCircle extends PositionComponent with HasGameRef<MyGame> {
       );
       add(arc);
     }
-    super.onLoad();
-  }
 
-  @override
-  void render(Canvas canvas) {
-    // double radius = this.radius - thickness / 2;
-    // canvas.drawCircle(
-    //   (size / 2).toOffset(),
-    //   radius,
-    //   Paint()
-    //     ..color = Colors.blueAccent
-    //     ..style = PaintingStyle.stroke
-    //     ..strokeWidth = thickness,
-    // );
-    super.render(canvas);
+    add(
+      RotateEffect.to(
+        circle,
+        EffectController(
+          duration: rotationSpeed,
+          infinite: true,
+        ),
+      ),
+    );
+    super.onLoad();
   }
 }
 

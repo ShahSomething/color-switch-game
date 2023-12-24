@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 
 class Player extends PositionComponent with HasGameRef<MyGame> {
   final double radius;
-  Player({this.radius = 15});
+  Player({this.radius = 15, required super.position});
 
   final Vector2 _speed = Vector2.zero();
   final double _gravity = 980.0;
@@ -16,7 +16,6 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
 
   @override
   FutureOr<void> onLoad() {
-    position = Vector2.zero();
     size = Vector2.all(radius * 2);
     anchor = Anchor.center;
     return super.onLoad();
