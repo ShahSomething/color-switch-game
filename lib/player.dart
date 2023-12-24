@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/my_game.dart';
+import 'package:color_switch_game/rotating_circle.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
@@ -24,6 +25,10 @@ class Player extends PositionComponent
     if (other is ColorSwitcher) {
       other.removeFromParent();
       _changeColorRandomly();
+    } else if (other is CircleArc) {
+      if (other.color != _color) {
+        debugPrint("Game Over");
+      }
     }
     super.onCollision(intersectionPoints, other);
   }

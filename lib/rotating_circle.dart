@@ -1,4 +1,5 @@
 import 'package:color_switch_game/my_game.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,7 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
   Future<void> onLoad() async {
     size = parent.size;
     position = parent.position;
+    _addHitbox();
     super.onLoad();
   }
 
@@ -83,5 +85,30 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
         ..strokeWidth = parent.thickness,
     );
     super.render(canvas);
+  }
+
+  void _addHitbox() {
+    final center = size / 2;
+    const precision = 10;
+    final segment = sweepAngle / (precision - 1);
+    final radius = size.x / 2;
+
+    List<Vector2> vertices = [];
+    for (int i = 0; i < precision; i++) {
+      final angle = startAngle + segment * i;
+      final x = radius * math.cos(angle);
+      final y = radius * math.sin(angle);
+      vertices.add(center + Vector2(x, y));
+    }
+    for (int i = precision - 1; i >= 0; i--) {
+      final angle = startAngle + segment * i;
+      final x = (radius - parent.thickness) * math.cos(angle);
+      final y = (radius - parent.thickness) * math.sin(angle);
+      vertices.add(center + Vector2(x, y));
+    }
+    add(PolygonHitbox(
+      vertices,
+      collisionType: CollisionType.passive,
+    ));
   }
 }

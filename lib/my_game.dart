@@ -29,6 +29,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
 
   @override
   void onMount() {
+    //debugMode = true;
     player = Player(position: Vector2(0, 250));
     //camera.follow(player);
     ground = Ground(position: Vector2(0, 400));
