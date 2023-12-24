@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 
 class Player extends PositionComponent with HasGameRef<MyGame> {
   final double radius;
-  Player({this.radius = 15, required super.position});
+  Player({this.radius = 12, required super.position});
 
   final Vector2 _speed = Vector2.zero();
   final double _gravity = 980.0;
   final double _jumpSpeed = -350.0;
+  final Color _color = Colors.white;
 
   @override
   FutureOr<void> onLoad() {
@@ -39,7 +40,7 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
     canvas.drawCircle(
       (size / 2).toOffset(),
       radius,
-      Paint()..color = const Color(0xFF00FF00),
+      Paint()..color = _color,
     );
     super.render(canvas);
   }

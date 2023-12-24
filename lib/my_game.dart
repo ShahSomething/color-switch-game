@@ -1,3 +1,4 @@
+import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/player.dart';
 import 'package:color_switch_game/rotating_circle.dart';
@@ -62,5 +63,7 @@ class MyGame extends FlameGame with TapCallbacks {
         radius: 100,
       ),
     );
+    final colorSwitcher = ColorSwitcher(position: Vector2(0, 200));
+    world.add(colorSwitcher);
   }
 }
