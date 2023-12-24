@@ -3,9 +3,11 @@ import 'dart:ui';
 import 'dart:math' as math;
 
 import 'package:color_switch_game/my_game.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-class ColorSwitcher extends PositionComponent with HasGameRef<MyGame> {
+class ColorSwitcher extends PositionComponent
+    with HasGameRef<MyGame>, CollisionCallbacks {
   final double radius;
   ColorSwitcher({
     this.radius = 20,
@@ -16,6 +18,14 @@ class ColorSwitcher extends PositionComponent with HasGameRef<MyGame> {
   FutureOr<void> onLoad() {
     anchor = Anchor.center;
     size = Vector2.all(radius * 2);
+    add(
+      CircleHitbox(
+        position: size / 2,
+        radius: radius,
+        anchor: anchor,
+        collisionType: CollisionType.passive,
+      ),
+    );
     return super.onLoad();
   }
 

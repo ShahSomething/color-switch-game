@@ -1,24 +1,45 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 
+import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/my_game.dart';
+import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 import 'package:flutter/material.dart';
 
-class Player extends PositionComponent with HasGameRef<MyGame> {
+class Player extends PositionComponent
+    with HasGameRef<MyGame>, CollisionCallbacks {
   final double radius;
   Player({this.radius = 12, required super.position});
 
   final Vector2 _speed = Vector2.zero();
   final double _gravity = 980.0;
   final double _jumpSpeed = -350.0;
-  final Color _color = Colors.white;
+  Color _color = Colors.white;
+
+  @override
+  void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
+    if (other is ColorSwitcher) {
+      other.removeFromParent();
+      _changeColorRandomly();
+    }
+    super.onCollision(intersectionPoints, other);
+  }
 
   @override
   FutureOr<void> onLoad() {
     size = Vector2.all(radius * 2);
     anchor = Anchor.center;
+    add(
+      CircleHitbox(
+        position: size / 2,
+        radius: radius,
+        anchor: anchor,
+        collisionType: CollisionType.active,
+      ),
+    );
     return super.onLoad();
   }
 
@@ -45,7 +66,11 @@ class Player extends PositionComponent with HasGameRef<MyGame> {
     super.render(canvas);
   }
 
-  jump() {
+  void jump() {
     _speed.y = _jumpSpeed;
+  }
+
+  void _changeColorRandomly() {
+    _color = gameRef.gameColors.random();
   }
 }
