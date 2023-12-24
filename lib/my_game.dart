@@ -22,6 +22,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   late Player player;
   late Ground ground;
   final List<Color> gameColors;
+  bool get isGamePaused => paused;
   @override
   Color backgroundColor() {
     return const Color(0xFF222222);
@@ -30,6 +31,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   @override
   void onMount() {
     //debugMode = true;
+
     _initializeGame();
     super.onMount();
   }
@@ -76,5 +78,13 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
       component.removeFromParent();
     }
     _initializeGame();
+  }
+
+  void pauseGame() {
+    pauseEngine();
+  }
+
+  void resumeGame() {
+    resumeEngine();
   }
 }
