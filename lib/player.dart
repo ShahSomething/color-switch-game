@@ -28,6 +28,7 @@ class Player extends PositionComponent
     } else if (other is CircleArc) {
       if (other.color != _color) {
         debugPrint("Game Over");
+        gameRef.gameOver();
       }
     }
     super.onCollision(intersectionPoints, other);

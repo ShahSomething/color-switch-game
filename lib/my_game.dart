@@ -30,14 +30,17 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   @override
   void onMount() {
     //debugMode = true;
+    _initializeGame();
+    super.onMount();
+  }
+
+  _initializeGame() {
     player = Player(position: Vector2(0, 250));
-    //camera.follow(player);
     ground = Ground(position: Vector2(0, 400));
     world.add(ground);
     world.add(player);
-    generateCircleComponent();
-
-    super.onMount();
+    camera.moveTo(Vector2.zero());
+    _generateCircleComponent();
   }
 
   @override
@@ -57,7 +60,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     super.onTapDown(event);
   }
 
-  generateCircleComponent() {
+  void _generateCircleComponent() {
     world.add(
       RotatingCircle(
         position: Vector2(0, 0),
@@ -66,5 +69,12 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
     );
     final colorSwitcher = ColorSwitcher(position: Vector2(0, 200));
     world.add(colorSwitcher);
+  }
+
+  void gameOver() {
+    for (var component in world.children) {
+      component.removeFromParent();
+    }
+    _initializeGame();
   }
 }
