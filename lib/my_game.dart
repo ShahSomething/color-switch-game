@@ -5,9 +5,11 @@ import 'package:color_switch_game/rotating_circle.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
+import 'package:flame/rendering.dart';
 import 'package:flutter/material.dart';
 
-class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
+class MyGame extends FlameGame
+    with TapCallbacks, HasCollisionDetection, HasDecorator, HasTimeScale {
   MyGame(
       {this.gameColors = const [
         Colors.redAccent,
@@ -22,7 +24,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   late Player player;
   late Ground ground;
   final List<Color> gameColors;
-  bool get isGamePaused => paused;
+  bool get isGamePaused => timeScale == 0;
   @override
   Color backgroundColor() {
     return const Color(0xFF222222);
@@ -31,7 +33,7 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   @override
   void onMount() {
     //debugMode = true;
-
+    decorator = PaintDecorator.blur(0);
     _initializeGame();
     super.onMount();
   }
@@ -81,10 +83,12 @@ class MyGame extends FlameGame with TapCallbacks, HasCollisionDetection {
   }
 
   void pauseGame() {
-    pauseEngine();
+    (decorator as PaintDecorator).addBlur(4);
+    timeScale = 0;
   }
 
   void resumeGame() {
-    resumeEngine();
+    (decorator as PaintDecorator).addBlur(0);
+    timeScale = 1;
   }
 }

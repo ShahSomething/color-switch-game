@@ -50,16 +50,42 @@ class _HomeState extends State<Home> {
       body: Stack(
         children: [
           GameWidget(game: game),
-          Positioned(
-            top: 40,
-            left: 10,
-            child: IconButton(
-              onPressed: toggleGameState,
-              icon: Icon(
-                game.isGamePaused ? Icons.play_arrow_rounded : Icons.pause,
+          if (!game.isGamePaused)
+            Positioned(
+              top: 40,
+              left: 10,
+              child: IconButton(
+                onPressed: toggleGameState,
+                icon: const Icon(Icons.pause),
+              ),
+            )
+          else
+            Center(
+              child: Container(
+                color: Colors.black54,
+                width: double.infinity,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "PAUSED",
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: toggleGameState,
+                      iconSize: 140,
+                      icon: const Icon(
+                        Icons.play_arrow_rounded,
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
