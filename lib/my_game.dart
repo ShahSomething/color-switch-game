@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/player.dart';
@@ -7,6 +9,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/rendering.dart';
+import 'package:flame_audio/flame_audio.dart';
 import 'package:flutter/material.dart';
 
 class MyGame extends FlameGame
@@ -34,9 +37,15 @@ class MyGame extends FlameGame
   }
 
   @override
-  void onMount() {
+  FutureOr<void> onLoad() {
     // debugMode = true;
+    FlameAudio.bgm.initialize();
     decorator = PaintDecorator.blur(0);
+    return super.onLoad();
+  }
+
+  @override
+  void onMount() {
     _initializeGame();
     super.onMount();
   }
@@ -49,6 +58,9 @@ class MyGame extends FlameGame
     world.add(player);
     camera.moveTo(Vector2.zero());
     _generateCircleComponent();
+    FlameAudio.bgm.play(
+      'bg_music.mp3',
+    );
   }
 
   @override
@@ -81,6 +93,7 @@ class MyGame extends FlameGame
   }
 
   void gameOver() {
+    FlameAudio.bgm.stop();
     for (var component in world.children) {
       component.removeFromParent();
     }
@@ -88,16 +101,24 @@ class MyGame extends FlameGame
   }
 
   void pauseGame() {
+    FlameAudio.bgm.pause();
     (decorator as PaintDecorator).addBlur(4);
     timeScale = 0;
   }
 
   void resumeGame() {
+    FlameAudio.bgm.resume();
     (decorator as PaintDecorator).addBlur(0);
     timeScale = 1;
   }
 
   void incrementScore() {
     currentScore.value++;
+  }
+
+  @override
+  void onDispose() {
+    FlameAudio.bgm.dispose();
+    super.onDispose();
   }
 }
