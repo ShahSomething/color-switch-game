@@ -32,7 +32,7 @@ class Player extends PositionComponent
         gameRef.gameOver();
       }
     } else if (other is StarComponent) {
-      other.removeFromParent();
+      other.showCollisionEffect();
       gameRef.incrementScore();
     }
     super.onCollision(intersectionPoints, other);
@@ -40,6 +40,7 @@ class Player extends PositionComponent
 
   @override
   FutureOr<void> onLoad() {
+    priority = 10;
     size = Vector2.all(radius * 2);
     anchor = Anchor.center;
     add(
