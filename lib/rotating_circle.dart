@@ -41,7 +41,7 @@ class RotatingCircle extends PositionComponent with HasGameRef<MyGame> {
       RotateEffect.to(
         circle,
         EffectController(
-          duration: rotationSpeed,
+          speed: rotationSpeed,
           infinite: true,
         ),
       ),
@@ -66,7 +66,6 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
     _paint = Paint();
     size = parent.size;
 
-    position = parent.position;
     _addHitbox();
     super.onLoad();
   }

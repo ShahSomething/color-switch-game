@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
@@ -32,6 +33,9 @@ class MyGame extends FlameGame
   final ValueNotifier<int> currentScore = ValueNotifier(0);
   bool get isGamePaused => timeScale == 0;
 
+  double lastObstaclePosition = -400;
+  double obstacleSpacing = 400;
+
   @override
   Color backgroundColor() {
     return const Color(0xFF222222);
@@ -39,7 +43,7 @@ class MyGame extends FlameGame
 
   @override
   FutureOr<void> onLoad() {
-    debugMode = false;
+    // debugMode = true;
     Flame.images.loadAll([
       'star_icon.png',
       'finger_tap.png',
@@ -63,12 +67,23 @@ class MyGame extends FlameGame
 
   _initializeGame() {
     currentScore.value = 0;
+    lastObstaclePosition = -400;
+    obstacleSpacing = 400;
     player = Player(position: Vector2(0, 250));
     ground = Ground(position: Vector2(0, 400));
     world.add(ground);
     world.add(player);
     camera.moveTo(Vector2.zero());
-    _generateCircleComponent();
+    _generateCircleComponent(
+      position: Vector2(0, 0),
+      radius: 100,
+    );
+    _generateCircleComponent(
+      position: Vector2(0, -400),
+      radius: 100,
+    );
+    if (FlameAudio.bgm.isPlaying) FlameAudio.bgm.stop();
+
     FlameAudio.bgm.play(
       'bg_music.mp3',
     );
@@ -82,6 +97,20 @@ class MyGame extends FlameGame
     if (playerY < cameraY) {
       camera.viewfinder.position = player.position;
     }
+
+    // Check if it's time to generate a new obstacle
+    if (playerY <= lastObstaclePosition - obstacleSpacing) {
+      var circleCount = Random().nextInt(2) + 1;
+      // Generate a new obstacle
+      _generateCircleComponent(
+        position: Vector2(0, lastObstaclePosition - 2 * obstacleSpacing),
+        radius: 100,
+        circleCount: circleCount,
+      );
+
+      // Update the position of the last obstacle
+      lastObstaclePosition -= obstacleSpacing;
+    }
     super.update(dt);
   }
 
@@ -91,15 +120,34 @@ class MyGame extends FlameGame
     super.onTapDown(event);
   }
 
-  void _generateCircleComponent() {
-    world.add(
-      RotatingCircle(
-        position: Vector2(0, 0),
-        radius: 100,
-      ),
-    );
-    world.add(StarComponent(position: Vector2(0, 0)));
-    final colorSwitcher = ColorSwitcher(position: Vector2(0, 200));
+  void _generateCircleComponent(
+      {required Vector2 position,
+      required double radius,
+      int circleCount = 1}) {
+    double totalArcLength = 0.0;
+    // Calculate the total arc length for both circles
+    for (int i = 0; i < circleCount; i++) {
+      double currentRadius =
+          radius - (i * 16); // Adjusted based on your description
+      double currentCircumference = 2 * pi * currentRadius; // Pi * Diameter
+
+      totalArcLength += currentCircumference;
+    }
+    // Calculate linear speed to meet in 3 seconds
+    double linearSpeed = totalArcLength / 3;
+    for (int i = 0; i < circleCount; i++) {
+      double currentRadius =
+          radius - (i * 16); // Adjusted based on your description
+      double currentRotationSpeed = linearSpeed / currentRadius;
+      final circle = RotatingCircle(
+        position: position,
+        radius: currentRadius,
+        rotationSpeed: currentRotationSpeed,
+      );
+      world.add(circle);
+    }
+    world.add(StarComponent(position: position));
+    final colorSwitcher = ColorSwitcher(position: position + Vector2(0, 200));
     world.add(colorSwitcher);
   }
 
@@ -132,5 +180,17 @@ class MyGame extends FlameGame
   void onDispose() {
     FlameAudio.bgm.dispose();
     super.onDispose();
+  }
+
+  @override
+  void onRemove() {
+    // Optional based on your game needs.
+    removeAll(children);
+    processLifecycleEvents();
+    Flame.images.clearCache();
+    Flame.assets.clearCache();
+    FlameAudio.audioCache.clearAll();
+    FlameAudio.bgm.dispose();
+    // Any other code that you want to run when the game is removed.
   }
 }
