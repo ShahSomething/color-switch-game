@@ -34,6 +34,7 @@ class StarComponent extends PositionComponent {
   }
 
   void showCollisionEffect() {
+    removeFromParent();
     final rnd = Random();
     Vector2 randomVector() => (Vector2.random(rnd) - Vector2.random(rnd)) * 100;
     final particle = ParticleSystemComponent(
@@ -65,6 +66,5 @@ class StarComponent extends PositionComponent {
     );
 
     parent?.add(particle);
-    removeFromParent();
   }
 }
