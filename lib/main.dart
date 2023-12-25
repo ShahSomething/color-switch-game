@@ -54,9 +54,24 @@ class _HomeState extends State<Home> {
             Positioned(
               top: 40,
               left: 10,
-              child: IconButton(
-                onPressed: toggleGameState,
-                icon: const Icon(Icons.pause),
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: toggleGameState,
+                    icon: const Icon(Icons.pause),
+                  ),
+                  ValueListenableBuilder(
+                      valueListenable: game.currentScore,
+                      builder: (context, value, _) {
+                        return Text(
+                          value.toString(),
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      })
+                ],
               ),
             )
           else

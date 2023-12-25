@@ -25,7 +25,9 @@ class MyGame extends FlameGame
   late Player player;
   late Ground ground;
   final List<Color> gameColors;
+  final ValueNotifier<int> currentScore = ValueNotifier(0);
   bool get isGamePaused => timeScale == 0;
+
   @override
   Color backgroundColor() {
     return const Color(0xFF222222);
@@ -40,6 +42,7 @@ class MyGame extends FlameGame
   }
 
   _initializeGame() {
+    currentScore.value = 0;
     player = Player(position: Vector2(0, 250));
     ground = Ground(position: Vector2(0, 400));
     world.add(ground);
@@ -95,6 +98,6 @@ class MyGame extends FlameGame
   }
 
   void incrementScore() {
-    debugPrint("Scored");
+    currentScore.value++;
   }
 }
