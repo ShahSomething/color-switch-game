@@ -2,6 +2,7 @@ import 'package:color_switch_game/color_switcher.dart';
 import 'package:color_switch_game/ground.dart';
 import 'package:color_switch_game/player.dart';
 import 'package:color_switch_game/rotating_circle.dart';
+import 'package:color_switch_game/star_component.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
@@ -32,7 +33,7 @@ class MyGame extends FlameGame
 
   @override
   void onMount() {
-    //debugMode = true;
+    // debugMode = true;
     decorator = PaintDecorator.blur(0);
     _initializeGame();
     super.onMount();
@@ -71,6 +72,7 @@ class MyGame extends FlameGame
         radius: 100,
       ),
     );
+    world.add(StarComponent(position: Vector2(0, 0)));
     final colorSwitcher = ColorSwitcher(position: Vector2(0, 200));
     world.add(colorSwitcher);
   }
@@ -90,5 +92,9 @@ class MyGame extends FlameGame
   void resumeGame() {
     (decorator as PaintDecorator).addBlur(0);
     timeScale = 1;
+  }
+
+  void incrementScore() {
+    debugPrint("Scored");
   }
 }
