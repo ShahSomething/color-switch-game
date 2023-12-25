@@ -9,6 +9,7 @@ import 'package:flame/components.dart';
 class ColorSwitcher extends PositionComponent
     with HasGameRef<MyGame>, CollisionCallbacks {
   final double radius;
+  late Paint _paint;
   ColorSwitcher({
     this.radius = 20,
     required super.position,
@@ -16,6 +17,7 @@ class ColorSwitcher extends PositionComponent
 
   @override
   FutureOr<void> onLoad() {
+    _paint = Paint();
     anchor = Anchor.center;
     size = Vector2.all(radius * 2);
     add(
@@ -47,7 +49,7 @@ class ColorSwitcher extends PositionComponent
         startAngle,
         arcAngle,
         true,
-        Paint()..color = color,
+        _paint..color = color,
       );
     }
     super.render(canvas);

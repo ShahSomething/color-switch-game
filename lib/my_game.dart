@@ -7,6 +7,7 @@ import 'package:color_switch_game/rotating_circle.dart';
 import 'package:color_switch_game/star_component.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/rendering.dart';
 import 'package:flame_audio/flame_audio.dart';
@@ -38,7 +39,17 @@ class MyGame extends FlameGame
 
   @override
   FutureOr<void> onLoad() {
-    // debugMode = true;
+    debugMode = false;
+    Flame.images.loadAll([
+      'star_icon.png',
+      'finger_tap.png',
+    ]);
+    FlameAudio.audioCache.loadAll([
+      'bg_music.mp3',
+      'score.wav',
+      'jump.wav',
+      'crash.wav',
+    ]);
     FlameAudio.bgm.initialize();
     decorator = PaintDecorator.blur(0);
     return super.onLoad();
@@ -93,6 +104,7 @@ class MyGame extends FlameGame
   }
 
   void gameOver() {
+    FlameAudio.play('crash.wav');
     FlameAudio.bgm.stop();
     for (var component in world.children) {
       component.removeFromParent();

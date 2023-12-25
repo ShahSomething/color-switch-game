@@ -21,6 +21,7 @@ class Player extends PositionComponent
   final double _gravity = 980.0;
   final double _jumpSpeed = -350.0;
   Color _color = Colors.white;
+  late Paint _paint;
 
   @override
   void onCollision(Set<Vector2> intersectionPoints, PositionComponent other) {
@@ -42,6 +43,7 @@ class Player extends PositionComponent
 
   @override
   FutureOr<void> onLoad() {
+    _paint = Paint();
     priority = 10;
     size = Vector2.all(radius * 2);
     anchor = Anchor.center;
@@ -74,12 +76,13 @@ class Player extends PositionComponent
     canvas.drawCircle(
       (size / 2).toOffset(),
       radius,
-      Paint()..color = _color,
+      _paint..color = _color,
     );
     super.render(canvas);
   }
 
   void jump() {
+    FlameAudio.play('jump.wav');
     _speed.y = _jumpSpeed;
   }
 

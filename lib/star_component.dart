@@ -9,8 +9,10 @@ import 'package:flutter/material.dart';
 class StarComponent extends PositionComponent {
   StarComponent({required super.position});
   late Sprite _starSprite;
+  late Paint _paint;
   @override
   FutureOr<void> onLoad() async {
+    _paint = Paint();
     _starSprite = await Sprite.load('star_icon.png');
     anchor = Anchor.center;
     size = Vector2(30, 30);
@@ -41,7 +43,7 @@ class StarComponent extends PositionComponent {
       position: position,
       particle: Particle.generate(
         count: 20,
-        lifespan: 1,
+        lifespan: 0.8,
         generator: (i) => AcceleratedParticle(
           acceleration: randomVector(),
           speed: randomVector(),
@@ -54,10 +56,10 @@ class StarComponent extends PositionComponent {
                   Color.lerp(Colors.white, Colors.transparent, (1 - progress));
               _starSprite.render(
                 canvas,
-                size: (size / 2) * (1 - progress),
+                size: (size) * (1 - progress),
                 position: size / 2,
                 anchor: Anchor.center,
-                overridePaint: Paint()..color = color!,
+                overridePaint: _paint..color = color!,
               );
             }),
           ),

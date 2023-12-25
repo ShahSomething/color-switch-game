@@ -54,6 +54,7 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
   final double startAngle;
   final double sweepAngle;
   final Color color;
+  late Paint _paint;
   CircleArc({
     this.startAngle = 0,
     this.sweepAngle = 0,
@@ -62,7 +63,9 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
 
   @override
   Future<void> onLoad() async {
+    _paint = Paint();
     size = parent.size;
+
     position = parent.position;
     _addHitbox();
     super.onLoad();
@@ -79,7 +82,7 @@ class CircleArc extends PositionComponent with ParentIsA<RotatingCircle> {
       startAngle,
       sweepAngle,
       false,
-      Paint()
+      _paint
         ..color = color
         ..style = PaintingStyle.stroke
         ..strokeWidth = parent.thickness,
