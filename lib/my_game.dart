@@ -34,7 +34,7 @@ class MyGame extends FlameGame
   bool get isGamePaused => timeScale == 0;
 
   double lastObstaclePosition = -400;
-  double obstacleSpacing = 400;
+  double obstacleSpacing = 500;
 
   @override
   Color backgroundColor() {
@@ -43,7 +43,7 @@ class MyGame extends FlameGame
 
   @override
   FutureOr<void> onLoad() {
-    // debugMode = true;
+    //debugMode = true;
     Flame.images.loadAll([
       'star_icon.png',
       'finger_tap.png',
@@ -67,20 +67,19 @@ class MyGame extends FlameGame
 
   _initializeGame() {
     currentScore.value = 0;
-    lastObstaclePosition = -400;
-    obstacleSpacing = 400;
-    player = Player(position: Vector2(0, 250));
+    lastObstaclePosition = -500;
+    obstacleSpacing = 500;
+    player = Player(position: Vector2(0, 200));
     ground = Ground(position: Vector2(0, 400));
     world.add(ground);
     world.add(player);
     camera.moveTo(Vector2.zero());
+
     _generateCircleComponent(
       position: Vector2(0, 0),
-      radius: 100,
     );
     _generateCircleComponent(
-      position: Vector2(0, -400),
-      radius: 100,
+      position: Vector2(0, -500),
     );
     if (FlameAudio.bgm.isPlaying) FlameAudio.bgm.stop();
 
@@ -99,12 +98,11 @@ class MyGame extends FlameGame
     }
 
     // Check if it's time to generate a new obstacle
-    if (playerY <= lastObstaclePosition - obstacleSpacing) {
+    if (playerY <= lastObstaclePosition + 400) {
       var circleCount = Random().nextInt(2) + 1;
       // Generate a new obstacle
       _generateCircleComponent(
-        position: Vector2(0, lastObstaclePosition - 2 * obstacleSpacing),
-        radius: 100,
+        position: Vector2(0, lastObstaclePosition - obstacleSpacing),
         circleCount: circleCount,
       );
 
@@ -121,33 +119,33 @@ class MyGame extends FlameGame
   }
 
   void _generateCircleComponent(
-      {required Vector2 position,
-      required double radius,
-      int circleCount = 1}) {
-    double totalArcLength = 0.0;
+      {required Vector2 position, double radius = 170, int circleCount = 1}) {
+    //double totalArcLength = 0.0;
+    double thickness = 20;
     // Calculate the total arc length for both circles
-    for (int i = 0; i < circleCount; i++) {
-      double currentRadius =
-          radius - (i * 16); // Adjusted based on your description
-      double currentCircumference = 2 * pi * currentRadius; // Pi * Diameter
+    // for (int i = 0; i < circleCount; i++) {
+    //   double currentRadius =
+    //       radius - (i * thickness * 2); // Adjusted based on your description
+    //   double currentCircumference = 2 * pi * currentRadius; // Pi * Diameter
 
-      totalArcLength += currentCircumference;
-    }
+    //   totalArcLength += currentCircumference;
+    // }
     // Calculate linear speed to meet in 3 seconds
-    double linearSpeed = totalArcLength / 3;
+    // double linearSpeed = totalArcLength / 3;
+
     for (int i = 0; i < circleCount; i++) {
       double currentRadius =
-          radius - (i * 16); // Adjusted based on your description
-      double currentRotationSpeed = linearSpeed / currentRadius;
+          radius - (i * thickness * 2); // Adjusted based on your description
+      //double currentRotationSpeed = linearSpeed / currentRadius;
       final circle = RotatingCircle(
         position: position,
         radius: currentRadius,
-        rotationSpeed: currentRotationSpeed,
+        thickness: thickness,
       );
       world.add(circle);
     }
     world.add(StarComponent(position: position));
-    final colorSwitcher = ColorSwitcher(position: position + Vector2(0, 200));
+    final colorSwitcher = ColorSwitcher(position: position + Vector2(0, 250));
     world.add(colorSwitcher);
   }
 

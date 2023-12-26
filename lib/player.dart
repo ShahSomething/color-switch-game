@@ -87,6 +87,6 @@ class Player extends PositionComponent
   }
 
   void _changeColorRandomly() {
-    _color = gameRef.gameColors.random();
+    _color = gameRef.gameColors.where((col) => col != _color).toList().random();
   }
 }
